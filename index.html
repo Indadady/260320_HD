@@ -74,7 +74,7 @@
         }
 
         /* =========================================================
-           [A4 1장 표(Table) 인쇄 전용 CSS - 어르신 맞춤 꽉찬 화면] 
+           [A4 1장 표(Table) 인쇄 전용 CSS - 1장 꽉찬 화면 (겹침 방지)] 
            ========================================================= */
         @media screen {
             /* 평상시 웹 화면에서는 인쇄용 표를 절대 보이지 않게 함 */
@@ -84,14 +84,17 @@
         @media print {
             @page {
                 size: A4 portrait; /* A4 세로 방향 출력 */
-                margin: 0; /* 브라우저 자체 머리글/바닥글(URL 등) 강제 제거 */
+                margin: 0; /* 브라우저 자체 머리글/바닥글 강제 제거 */
             }
-            body {
+            html, body {
                 background-color: white !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                overflow: hidden !important; /* 2페이지로 넘어가는 현상 원천 차단 */
             }
             
             /* 인쇄 시 모바일/웹 UI 통째로 숨김 */
@@ -103,10 +106,12 @@
             #print-area { 
                 display: flex !important; 
                 flex-direction: column !important;
-                padding: 12mm 15mm !important; /* 상하좌우 안전 여백 */
+                padding: 10mm 12mm !important; /* 상하좌우 안전 여백 미세 축소 */
                 width: 100vw !important;
                 height: 100vh !important; /* A4 용지 1장 높이에 정확히 맞춤 */
+                max-height: 100vh !important;
                 box-sizing: border-box !important;
+                overflow: hidden !important;
             }
             
             /* 꽉 찬 표를 위한 강제 CSS 부여 */
@@ -115,10 +120,12 @@
                 width: 100% !important; 
                 height: 100% !important; /* 남은 공간을 표가 쫙 늘어나며 채움 */
                 border: 2px solid #000 !important; 
+                table-layout: fixed !important; /* 열 너비 고정으로 글자 겹침 방지 */
             }
             #print-area th, #print-area td { 
                 border: 1px solid #4b5563 !important; 
                 color: #000 !important; 
+                word-break: keep-all !important; /* 단어 단위 줄바꿈으로 가독성 확보 */
             }
             #print-area th { 
                 background-color: #f3f4f6 !important; 
@@ -580,40 +587,40 @@
     <div id="print-area" class="bg-white text-black font-sans mx-auto flex-col justify-between">
         
         <!-- 상단 헤더 영역 -->
-        <div class="border-b-4 border-black pb-4 mb-4 text-center shrink-0">
-            <h1 class="text-3xl font-black text-center mb-3 tracking-tight">[VIP] 이영자 회장님 일행 2박 3일 남해안 미식 투어</h1>
-            <p class="text-center text-[15pt] text-gray-800 font-bold mb-2 tracking-wide">
+        <div class="border-b-4 border-black pb-3 mb-3 text-center shrink-0">
+            <h1 class="text-[22pt] font-black text-center mb-2 tracking-tight">[VIP] 이영자 회장님 일행 2박 3일 남해안 미식 투어</h1>
+            <p class="text-center text-[13pt] text-gray-800 font-bold mb-1 tracking-wide">
                 일정: 2026.03.20(목) ~ 03.22(토) &nbsp;|&nbsp; 인원: 18명 &nbsp;|&nbsp; 담당: 김효돈 이사 (010-5115-6118)
             </p>
-            <p class="text-center text-[12pt] text-gray-600 mt-2">※ 본 일정표는 현지 사정(기상, 교통 등)에 따라 다소 변경될 수 있습니다.</p>
+            <p class="text-center text-[11pt] text-gray-600 mt-1">※ 본 일정표는 현지 사정(기상, 교통 등)에 따라 다소 변경될 수 있습니다.</p>
         </div>
         
         <!-- 중앙 일정표 (flex-1 속성으로 A4 용지 남는 공간을 표가 꽉 채웁니다) -->
-        <table class="w-full text-[14pt] border-collapse border-2 border-black flex-1 shadow-sm">
+        <table class="w-full border-collapse border-2 border-black flex-1 shadow-sm">
             <thead>
-                <tr class="bg-gray-100 text-center text-[15pt]">
-                    <th class="border border-gray-400 p-3 w-[12%] font-black">일자</th>
-                    <th class="border border-gray-400 p-3 w-[12%] font-black">지역</th>
-                    <th class="border border-gray-400 p-3 w-[10%] font-black">교통</th>
-                    <th class="border border-gray-400 p-3 w-[50%] font-black">상세일정</th>
-                    <th class="border border-gray-400 p-3 w-[16%] font-black">식사</th>
+                <tr class="bg-gray-100 text-center text-[14pt]">
+                    <th class="border border-gray-400 p-2 w-[12%] font-black">일자</th>
+                    <th class="border border-gray-400 p-2 w-[12%] font-black">지역</th>
+                    <th class="border border-gray-400 p-2 w-[8%] font-black">교통</th>
+                    <th class="border border-gray-400 p-2 w-[54%] font-black">상세일정</th>
+                    <th class="border border-gray-400 p-2 w-[14%] font-black">식사</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- 1일차 -->
                 <tr class="border-b border-gray-400">
-                    <td class="border border-gray-400 p-3 text-center font-bold">1일차<br><span class="text-[13pt] font-normal">(3/20 목)</span></td>
-                    <td class="border border-gray-400 p-3 text-center font-bold">사북<br>봉화<br>곡성<br>순천</td>
-                    <td class="border border-gray-400 p-3 text-center font-medium">전용<br>버스</td>
-                    <td class="border border-gray-400 p-5 align-middle">
-                        <ul class="list-disc list-inside space-y-4 font-medium">
-                            <li><strong class="text-[16pt]">05:00</strong> 사북 집결 및 출발</li>
-                            <li><strong class="text-[16pt]">곡성 섬진강 기차마을</strong><br><span class="ml-6 text-[13pt] text-gray-700">(옛 곡성역 복원, 증기기관차 체험 등)</span></li>
-                            <li><strong class="text-[16pt]">순천 세계 돌 수석박물관</strong> 관람</li>
-                            <li class="mt-4 text-blue-800"><strong class="text-[16pt]">[호텔] 순천 부영호텔 숙박</strong></li>
+                    <td class="border border-gray-400 p-2 text-center font-bold text-[14pt]">1일차<br><span class="text-[12pt] font-normal">(3/20 목)</span></td>
+                    <td class="border border-gray-400 p-2 text-center font-bold text-[14pt]">사북<br>봉화<br>곡성<br>순천</td>
+                    <td class="border border-gray-400 p-2 text-center font-medium text-[13pt]">전용<br>버스</td>
+                    <td class="border border-gray-400 p-3 align-middle">
+                        <ul class="list-disc list-inside space-y-2 font-medium">
+                            <li><strong class="text-[14.5pt]">05:00</strong> <span class="text-[14.5pt]">사북 집결 및 출발</span></li>
+                            <li><strong class="text-[14.5pt]">곡성 섬진강 기차마을</strong> <span class="text-[12pt] text-gray-700">(옛 곡성역 복원, 증기기관차 등)</span></li>
+                            <li><strong class="text-[14.5pt]">순천 세계 돌 수석박물관</strong> <span class="text-[14.5pt]">관람</span></li>
+                            <li class="mt-2 text-blue-800"><strong class="text-[14.5pt]">[호텔] 순천 부영호텔 숙박</strong></li>
                         </ul>
                     </td>
-                    <td class="border border-gray-400 p-3 text-center text-gray-800 leading-loose font-bold text-[14pt]">
+                    <td class="border border-gray-400 p-2 text-center text-gray-800 leading-relaxed font-bold text-[13pt]">
                         조: 한식(봉화)<br>
                         중: 참게매운탕<br>
                         석: 꼬막정식
@@ -621,39 +628,39 @@
                 </tr>
                 <!-- 2일차 -->
                 <tr class="border-b border-gray-400">
-                    <td class="border border-gray-400 p-3 text-center font-bold">2일차<br><span class="text-[13pt] font-normal">(3/21 금)</span></td>
-                    <td class="border border-gray-400 p-3 text-center font-bold">순천<br>거제</td>
-                    <td class="border border-gray-400 p-3 text-center font-medium">전용<br>버스</td>
-                    <td class="border border-gray-400 p-5 align-middle">
-                        <ul class="list-disc list-inside space-y-4 font-medium">
-                            <li><strong class="text-[16pt]">거제 정글돔 식물원</strong><br><span class="ml-6 text-[13pt] text-gray-700">(국내 최대 규모 유리 온실)</span></li>
-                            <li><strong class="text-[16pt]">거제 자연예술공원</strong><br><span class="ml-6 text-[13pt] text-gray-700">(조각품과 자연이 어우러진 휴식처)</span></li>
-                            <li><strong class="text-[16pt]">거제 파노라마 케이블카 탑승</strong><br><span class="ml-6 text-[13pt] text-gray-700">(한려해상국립공원 360도 조망)</span></li>
-                            <li class="mt-4 text-blue-800"><strong class="text-[16pt]">[호텔] 거제 라마다호텔 숙박</strong></li>
+                    <td class="border border-gray-400 p-2 text-center font-bold text-[14pt]">2일차<br><span class="text-[12pt] font-normal">(3/21 금)</span></td>
+                    <td class="border border-gray-400 p-2 text-center font-bold text-[14pt]">순천<br>거제</td>
+                    <td class="border border-gray-400 p-2 text-center font-medium text-[13pt]">전용<br>버스</td>
+                    <td class="border border-gray-400 p-3 align-middle">
+                        <ul class="list-disc list-inside space-y-2 font-medium">
+                            <li><strong class="text-[14.5pt]">거제 정글돔 식물원</strong> <span class="text-[12pt] text-gray-700">(국내 최대 규모 유리 온실)</span></li>
+                            <li><strong class="text-[14.5pt]">거제 자연예술공원</strong> <span class="text-[12pt] text-gray-700">(조각품과 자연이 어우러진 휴식처)</span></li>
+                            <li><strong class="text-[14.5pt]">거제 파노라마 케이블카 탑승</strong> <span class="text-[12pt] text-gray-700">(360도 조망)</span></li>
+                            <li class="mt-2 text-blue-800"><strong class="text-[14.5pt]">[호텔] 거제 라마다호텔 숙박</strong></li>
                         </ul>
                     </td>
-                    <td class="border border-gray-400 p-3 text-center text-gray-800 leading-loose font-bold text-[14pt]">
+                    <td class="border border-gray-400 p-2 text-center text-gray-800 leading-relaxed font-bold text-[13pt]">
                         조: 호텔식<br>
                         중: 게장정식<br>
-                        석: 한꼬막두꼬막
+                        석: 한꼬막<br>두꼬막
                     </td>
                 </tr>
                 <!-- 3일차 -->
                 <tr class="border-b border-gray-400">
-                    <td class="border border-gray-400 p-3 text-center font-bold">3일차<br><span class="text-[13pt] font-normal">(3/22 토)</span></td>
-                    <td class="border border-gray-400 p-3 text-center font-bold">거제<br>부산<br>사북</td>
-                    <td class="border border-gray-400 p-3 text-center font-medium">전용<br>버스</td>
-                    <td class="border border-gray-400 p-5 align-middle">
-                        <ul class="list-disc list-inside space-y-4 font-medium">
-                            <li><strong class="text-[16pt]">부산 송도 해상케이블카 탑승</strong><br><span class="ml-6 text-[13pt] text-gray-700">(바다 위 1.6km 아찔한 비행)</span></li>
-                            <li><strong class="text-[16pt]">송정으로 이동 후 중식</strong></li>
-                            <li><strong class="text-[16pt]">해운대 블루라인파크 해변열차</strong><br><span class="ml-6 text-[13pt] text-gray-700">(동부산 해안 절경 감상)</span></li>
-                            <li class="mt-4 text-red-600"><strong class="text-[16pt]">사북으로 이동 후 해산 (안녕히 가십시오)</strong></li>
+                    <td class="border border-gray-400 p-2 text-center font-bold text-[14pt]">3일차<br><span class="text-[12pt] font-normal">(3/22 토)</span></td>
+                    <td class="border border-gray-400 p-2 text-center font-bold text-[14pt]">거제<br>부산<br>사북</td>
+                    <td class="border border-gray-400 p-2 text-center font-medium text-[13pt]">전용<br>버스</td>
+                    <td class="border border-gray-400 p-3 align-middle">
+                        <ul class="list-disc list-inside space-y-2 font-medium">
+                            <li><strong class="text-[14.5pt]">부산 송도 해상케이블카 탑승</strong> <span class="text-[12pt] text-gray-700">(바다 위 비행)</span></li>
+                            <li><strong class="text-[14.5pt]">송정으로 이동 후 중식</strong></li>
+                            <li><strong class="text-[14.5pt]">해운대 블루라인파크 해변열차</strong> <span class="text-[12pt] text-gray-700">(해안 절경 감상)</span></li>
+                            <li class="mt-2 text-red-600"><strong class="text-[14.5pt]">사북으로 이동 후 해산 (안녕히 가십시오)</strong></li>
                         </ul>
                     </td>
-                    <td class="border border-gray-400 p-3 text-center text-gray-800 leading-loose font-bold text-[14pt]">
+                    <td class="border border-gray-400 p-2 text-center text-gray-800 leading-relaxed font-bold text-[13pt]">
                         조: 대구탕<br>
-                        중: 보리밥(송정)<br>
+                        중: 보리밥<br>
                         석: 황금돼지
                     </td>
                 </tr>
@@ -661,12 +668,12 @@
         </table>
 
         <!-- 하단 로고 및 텍스트 영역 -->
-        <div class="flex justify-between items-center mt-4 pt-3 border-t-2 border-black shrink-0">
+        <div class="flex justify-between items-center mt-3 pt-2 border-t-2 border-black shrink-0">
             <div class="flex items-center gap-2">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker Logo" style="height: 24px;">
-                <span class="text-sm font-black text-gray-800">TOURMAKER INC.</span>
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker Logo" style="height: 20px;">
+                <span class="text-[11pt] font-black text-gray-800">TOURMAKER INC.</span>
             </div>
-            <span class="text-[11pt] text-gray-600 font-bold">[System Powered by TOURMAKER] 본 스마트 가이드북은 기획과 투어메이커의 트래블 테크 기술 제휴로 제작되었습니다.</span>
+            <span class="text-[10pt] text-gray-600 font-bold">[System Powered by TOURMAKER] 본 스마트 가이드북은 기획과 투어메이커의 트래블 테크 기술 제휴로 제작되었습니다.</span>
         </div>
         
     </div>
