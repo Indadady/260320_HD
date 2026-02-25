@@ -8,7 +8,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="[VIP] 이영자 회장님 일행 명품 미식 투어 (순천/거제/부산)">
     <meta property="og:description" content="3월 20일~22일 (2박 3일) 출발! 참게매운탕, 게장정식, 꼬막정식 등 남해안 최고의 미식과 명소 투어">
-    <!-- 썸네일은 웹페이지 메인 이미지 사용 (거제 파노라마 케이블카) -->
+    <!-- 썸네일은 웹페이지 메인 이미지 사용 (송도 해상 케이블카) -->
     <meta property="og:image" content="https://www.visitbusan.net/uploadImgs/files/cntnts/20230508183215090_wufrotr">
     <meta property="og:site_name" content="투어메이커">
 
@@ -75,58 +75,116 @@
             border: 0;
         }
 
-        /* [A4 1장 인쇄 전용 마법 CSS] */
+        /* =========================================================
+           [A4 1장 인쇄 전용 마법 CSS - 강력한 버그 픽스 버전] 
+           크롬 브라우저의 콘텐츠 날림 현상을 원천 차단했습니다.
+           ========================================================= */
         @media print {
             @page {
                 size: A4 landscape; /* 가로 방향 3단 배치를 위해 필수 */
-                margin: 12mm;
+                margin: 0; /* 브라우저 기본 머리글/바닥글(URL, 날짜, 페이지번호 등) 강제 제거 */
             }
-            body {
-                background-color: white;
-                font-size: 10pt;
+            html, body {
+                background-color: white !important;
+                font-size: 9.5pt !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                height: auto !important;
+                min-height: auto !important; /* 무한 높이 버그 방지 */
+                overflow: visible !important;
+                padding: 8mm !important; /* @page margin 제거를 대신하여 본문 자체에 인쇄 여백 생성 */
+                box-sizing: border-box !important;
             }
+            
             /* 불필요한 요소 완벽히 숨김 */
             nav, header, footer, .video-section, .print-btn, .print\:hidden {
                 display: none !important;
             }
             
             /* 컨테이너 여백 초기화 */
-            .max-w-3xl { max-width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
-            
-            /* 인쇄 전용 헤더 표시 */
-            .print-header { display: block !important; margin-bottom: 15px; border-bottom: 2px solid #333; padding-bottom: 10px; }
-            
-            /* 요약 정보 컴팩트하게 */
-            .summary-section { margin-top: 0 !important; margin-bottom: 15px !important; }
-            .summary-section .p-5 { padding: 8px !important; }
-            
-            /* 핵심: 3일차 일정을 가로 3단 Grid로 배치하여 1페이지 완성 */
-            .itinerary-wrapper { 
-                display: grid !important; 
-                grid-template-columns: repeat(3, 1fr) !important; 
-                gap: 15px !important; 
-                align-items: start;
+            .max-w-3xl { 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                box-shadow: none !important; 
+                min-height: auto !important;
             }
             
-            /* 섹션 내부 여백 및 박스 최소화 */
+            /* 인쇄 전용 헤더 표시 */
+            .print-header { 
+                display: block !important; 
+                margin-bottom: 12px; 
+                border-bottom: 2px solid #333; 
+                padding-bottom: 8px; 
+            }
+            
+            /* 요약 정보 컴팩트하게 & 겹침 버그(음수 마진) 해결 */
+            .summary-section { 
+                margin-top: 0 !important; /* -mt-6 제거하여 사라짐 방지 */
+                margin-bottom: 12px !important; 
+            }
+            .summary-section .p-5 { padding: 6px !important; }
+            
+            /* 핵심: Grid 버그를 피해 Flexbox로 안정적인 3단 배치 */
+            .itinerary-wrapper { 
+                display: flex !important; 
+                flex-direction: row !important; 
+                flex-wrap: nowrap !important; 
+                justify-content: space-between !important;
+                align-items: flex-start !important;
+                width: 100% !important;
+                gap: 0 !important;
+            }
+            
+            /* 3단 분할 너비 지정 */
+            .itinerary-wrapper > section {
+                flex: 0 0 32% !important;
+                width: 32% !important;
+                margin-right: 2% !important;
+            }
+            .itinerary-wrapper > section:last-child {
+                margin-right: 0 !important;
+            }
+            
+            /* 섹션 내부 여백 및 박스 최소화 (1장에 쏙 들어가게) */
             section { margin-bottom: 0 !important; padding: 0 !important; }
-            .hover-card, .rounded-xl { box-shadow: none !important; border: 1px solid #cbd5e1 !important; border-radius: 4px !important; }
-            .pb-8 { padding-bottom: 8px !important; }
-            .mb-6 { margin-bottom: 10px !important; }
-            .p-4, .p-3 { padding: 6px 10px !important; }
+            .hover-card, .rounded-xl { 
+                box-shadow: none !important; 
+                border: 1px solid #cbd5e1 !important; 
+                border-radius: 4px !important; 
+            }
+            .pb-8 { padding-bottom: 6px !important; }
+            .mb-6 { margin-bottom: 6px !important; }
+            .p-4, .p-3 { padding: 4px 6px !important; }
+            
+            /* 이미지 높이 축소 (A4 1장에 맞추기 위함) */
+            .h-40 { height: 70px !important; }
             
             /* 타임라인 축소 */
-            .pl-10 { padding-left: 26px !important; }
-            .w-10, .h-10 { width: 18px !important; height: 18px !important; font-size: 9px !important; border-width: 1px !important; line-height: 16px !important; }
-            .timeline-line { left: 9px !important; width: 1px !important; }
+            .pl-10 { padding-left: 20px !important; }
+            .w-10, .h-10 { 
+                width: 16px !important; 
+                height: 16px !important; 
+                font-size: 8px !important; 
+                border-width: 1px !important; 
+                line-height: 14px !important; 
+                top: 2px !important;
+            }
+            .timeline-line { left: 8px !important; width: 1px !important; }
             
             /* 폰트 및 텍스트 최적화 */
-            .text-lg { font-size: 11pt !important; font-weight: 800 !important; }
-            .text-sm { font-size: 9pt !important; }
-            .text-xs, p { font-size: 8.5pt !important; line-height: 1.3 !important; }
+            .text-lg { font-size: 10pt !important; font-weight: 800 !important; }
+            .text-sm { font-size: 8.5pt !important; }
+            .text-xs, p { font-size: 8pt !important; line-height: 1.25 !important; margin-top: 2px !important; }
             
             /* 일차 헤더 단순화 */
-            .sticky { position: static !important; background: transparent !important; border: none !important; padding: 0 !important; margin-bottom: 8px !important; }
+            .sticky { 
+                position: static !important; 
+                background: transparent !important; 
+                border: none !important; 
+                padding: 0 !important; 
+                margin-bottom: 6px !important; 
+            }
         }
     </style>
 </head>
@@ -166,7 +224,7 @@
 
         <!-- Hero Section -->
         <header class="relative h-[320px] overflow-hidden break-inside-avoid print:hidden">
-            <!-- 요청하신 남해안 배경 이미지로 교체 -->
+            <!-- 남해안 배경 이미지 -->
             <img src="https://cdn.koscaj.com/news/photo/202105/219008_49145_5638.jpg" 
                  alt="남해안 전경" class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
@@ -263,7 +321,6 @@
                             <i class="fas fa-train"></i>
                         </div>
                         <div class="rounded-xl overflow-hidden shadow-md bg-white border border-gray-100 group hover-card">
-                            <!-- 인쇄 시 이미지를 숨겨서 공간 절약 -->
                             <div class="relative h-40 overflow-hidden print:hidden">
                                 <img src="https://www.railtrip.co.kr/homepage/gokseong/image/train.jpg" 
                                      alt="곡성 기차마을" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -582,12 +639,6 @@
         </footer>
 
     </div>
-
-    <!-- [핵심] A4 1장 인쇄 버튼 (모바일/PC 화면 우측 하단 고정) -->
-    <button onclick="window.print()" class="print-btn fixed bottom-6 right-6 bg-blue-600 text-white w-14 h-14 rounded-full shadow-2xl hover:bg-blue-800 transition transform hover:scale-110 z-50 flex items-center justify-center flex-col border-2 border-white">
-        <i class="fas fa-print text-xl mb-0.5"></i>
-        <span class="text-[8px] font-bold">A4인쇄</span>
-    </button>
 
 </body>
 </html>
